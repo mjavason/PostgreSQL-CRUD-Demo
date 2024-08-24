@@ -1,9 +1,9 @@
 // sequelize.ts
 import { Sequelize } from 'sequelize-typescript';
 import { POSTGRES_DB_URL } from './constants';
-import { User } from './user.model';
+import { Profile, User } from './user.model';
 
-const sequelize = new Sequelize(POSTGRES_DB_URL, {
+export const sequelize = new Sequelize(POSTGRES_DB_URL, {
   dialect: 'postgres', // Choose your database dialect
   logging: false,
   dialectOptions: {
@@ -12,7 +12,7 @@ const sequelize = new Sequelize(POSTGRES_DB_URL, {
       rejectUnauthorized: false,
     },
   },
-  models: [User],
+  models: [User, Profile],
 });
 
 // Test the connection
@@ -28,7 +28,7 @@ export async function testConnection() {
 // Initialize Database
 export async function initDB() {
   try {
-    await sequelize.sync({ force: false }); // `force: true` will drop tables
+    await sequelize.sync({ force: false, alter: true }); // `force: true` will drop tables
     console.log('Database synced successfully');
   } catch (err) {
     console.error('Unable to sync database:', err);

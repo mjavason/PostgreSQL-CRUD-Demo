@@ -1,0 +1,9 @@
+
+When you delete a user in Sequelize, you can specify what happens to the associated profile using the onDelete and onUpdate options in the @ForeignKey definition. These options define the behavior of the foreign key constraint when the related row (e.g., user or profile) is deleted or updated.
+
+Options for onDelete and onUpdate
+CASCADE: Automatically deletes or updates the associated row when the primary row is deleted or updated.
+SET NULL: Sets the foreign key to NULL if the associated row is deleted.
+RESTRICT: Prevents deletion or updating of the primary row if there are associated rows.
+NO ACTION: Similar to RESTRICT, prevents action, but with deferred checks (often database-specific).
+SET DEFAULT: Sets the foreign key to a default value if the associated row is deleted or updated.

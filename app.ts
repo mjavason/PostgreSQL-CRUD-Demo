@@ -6,7 +6,7 @@ import dotenv from 'dotenv';
 import morgan from 'morgan';
 import { setupSwagger } from './swagger.config';
 import { initDB } from './database.config';
-import { User } from './user.model';
+import { Profile, User } from './user.model';
 
 //#region App Setup
 const app = express();
@@ -48,6 +48,12 @@ setupSwagger(app, BASE_URL);
  *               password:
  *                 type: string
  *                 example: securepassword
+ *               bio:
+ *                 type: string
+ *                 example: This is a sample bio
+ *               avatarURL:
+ *                 type: string
+ *                 example: http://awesome.com/image.jpg
  *     responses:
  *       201:
  *         description: User created successfully
@@ -56,8 +62,15 @@ setupSwagger(app, BASE_URL);
  */
 app.post('/user', async (req: Request, res: Response) => {
   try {
-    const { username, email, password } = req.body;
-    const user = await User.create({ username, email, password });
+    const { username, email, password, bio, avatarURL } = req.body;
+
+    const profile = await Profile.create({ bio, avatarURL });
+    const user = await User.create({
+      username,
+      email,
+      password,
+      profileId: profile.id,
+    });
 
     return res.status(201).json(user);
   } catch (error: any) {
@@ -86,7 +99,7 @@ app.post('/user', async (req: Request, res: Response) => {
  */
 app.get('/user', async (req: Request, res: Response) => {
   try {
-    const users = await User.findAll();
+    const users = await User.findAll({ include: Profile });
     return res.json(users);
   } catch (error: any) {
     return res.status(500).json({ error: error.message });
@@ -119,7 +132,7 @@ app.get('/user/:id', async (req: Request, res: Response) => {
   try {
     const user = await User.findByPk(req.params.id);
     if (user) return res.json(user);
-    
+
     return res.status(404).json({ error: 'User not found' });
   } catch (error: any) {
     return res.status(500).json({ error: error.message });
