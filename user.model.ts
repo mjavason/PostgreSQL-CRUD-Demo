@@ -1,9 +1,15 @@
 import { Table, Column, Model, DataType } from 'sequelize-typescript';
 
+export interface IUser {
+  username: string;
+  email: string;
+  password: string;
+}
+
 @Table({
   timestamps: true,
 })
-export class User extends Model<User> {
+export class User extends Model<IUser> {
   @Column({
     type: DataType.STRING,
     allowNull: false,
