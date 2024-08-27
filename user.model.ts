@@ -6,7 +6,6 @@ import {
   ForeignKey,
   BelongsTo,
 } from 'sequelize-typescript';
-import { sequelize } from './database.config';
 
 export interface IUser {
   username: string;

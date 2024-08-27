@@ -24,7 +24,6 @@ setupSwagger(app, BASE_URL);
 //#endregion App Setup
 
 //#region Code here
-
 /**
  * @swagger
  * /user:
@@ -72,7 +71,9 @@ app.post('/user', async (req: Request, res: Response) => {
       profileId: profile.id,
     });
 
-    return res.status(201).json(user);
+    return res
+      .status(201)
+      .json({ success: true, message: 'Successful', data: user });
   } catch (error: any) {
     return res.status(500).json({ error: error.message });
   }
@@ -100,7 +101,7 @@ app.post('/user', async (req: Request, res: Response) => {
 app.get('/user', async (req: Request, res: Response) => {
   try {
     const users = await User.findAll({ include: Profile });
-    return res.json(users);
+    return res.json({ success: true, message: 'Successful', data: users });
   } catch (error: any) {
     return res.status(500).json({ error: error.message });
   }
@@ -131,7 +132,8 @@ app.get('/user', async (req: Request, res: Response) => {
 app.get('/user/:id', async (req: Request, res: Response) => {
   try {
     const user = await User.findByPk(req.params.id);
-    if (user) return res.json(user);
+    if (user)
+      return res.json({ success: true, message: 'Successful', data: user });
 
     return res.status(404).json({ error: 'User not found' });
   } catch (error: any) {
@@ -186,7 +188,7 @@ app.put('/user/:id', async (req: Request, res: Response) => {
       user.email = email;
       user.password = password;
       await user.save();
-      return res.json(user);
+      return res.json({ success: true, message: 'Successful', data: user });
     } else {
       return res.status(404).json({ error: 'User not found' });
     }
